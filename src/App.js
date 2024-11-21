@@ -1,4 +1,4 @@
-import "./App.css";
+import "./styles/todoStyle.css";
 import TodoList from "./components/TodoList";
 import { TodoProvider } from "./store/TodoContext";
 import FilterButtons from "./components/FilterButtons";

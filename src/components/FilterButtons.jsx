@@ -1,17 +1,23 @@
 import { useContext, useState } from "react";
 import { Radio } from "antd";
 import { TodoContext } from "../store/TodoContext";
-import { getStorage } from "../utilities/storageManager";
+import {
+  FILTERED_TYPE_KEY,
+  TODO_LIST_KEY,
+  getStorage,
+  setStorage,
+} from "../utilities/storageManager";
 
-const ALL_ITEMS = "All";
+export const ALL_ITEMS = "All";
 
 const FilterButtons = () => {
   const [value, setValue] = useState(ALL_ITEMS);
   const { updateTodos } = useContext(TodoContext);
-  const getTodoListFromStorage = getStorage("todoList") || [];
+  const getTodoListFromStorage = getStorage(TODO_LIST_KEY) || [];
 
   const handleFilterItem = (e) => {
     const selectedValue = e.target.value;
+    setStorage(selectedValue, FILTERED_TYPE_KEY);
     setValue(selectedValue);
     if (getTodoListFromStorage.length) {
       if (selectedValue === ALL_ITEMS) {

@@ -1,11 +1,17 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getStorage, setStorage } from "../utilities/storageManager";
+import {
+  FILTERED_TYPE_KEY,
+  TODO_LIST_KEY,
+  getStorage,
+  setStorage,
+} from "../utilities/storageManager";
 import { initialTodoList } from "../utilities/mockData";
+import { ALL_ITEMS } from "../components/FilterButtons";
 
 export const TodoContext = createContext();
 
 export const TodoProvider = ({ children }) => {
-  const getTodoListFromStorage = getStorage("todoList") || [];
+  const getTodoListFromStorage = getStorage(TODO_LIST_KEY) || [];
   const initialTodos = getTodoListFromStorage.length
     ? getTodoListFromStorage
     : initialTodoList;
@@ -42,11 +48,15 @@ export const TodoProvider = ({ children }) => {
   };
 
   const changeStatus = (id, newStatus) => {
-    updateTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, status: newStatus } : todo
-      )
+    const getTypeFromStorage = getStorage(FILTERED_TYPE_KEY);
+    const arr = initialTodos.map((todo) =>
+      todo.id === id ? { ...todo, status: newStatus } : todo
     );
+    updateTodos(arr);
+    if (getTypeFromStorage !== ALL_ITEMS) {
+      console.log(todos);
+      setTodos(arr.filter((todo) => todo.status === getTypeFromStorage));
+    }
   };
 
   return (
